@@ -6,6 +6,9 @@ import ToDoCard from "./ToDoCard.tsx";
 export default function ToDoDashboard() {
 
     const [data, setData] = useState<ToDo[]>([]);
+    const openTodos = data.filter(todo => todo.status === "OPEN");
+    const inProgressTodos = data.filter(todo => todo.status === "IN_PROGRESS");
+    const doneTodos = data.filter(todo => todo.status === "DONE");
 
     function fetchAllToDos() {
         axios.get("/api/todo")
@@ -19,28 +22,19 @@ export default function ToDoDashboard() {
 
     return (
         <>
-            {data.map(todo =>{
-                switch (todo.status){
-                    case "OPEN":
-                        return <>
-                            <h2>Offen</h2>
-                            <ToDoCard key={todo.id} todo={todo} />
-                        </>
-                    case "IN_PROGRESS":
-                        return <>
-                            <h2>In Bearbeitung</h2>
-                            <ToDoCard key={todo.id} todo={todo} />
-                        </>
-                    case "DONE":
-                        return <>
-                            <h2>Erledigt</h2>
-                            <ToDoCard key={todo.id} todo={todo} />
-                        </>
-                    default:
-                        return <p>Keine Todos</p>
-                }
-            })}
-
+            <div>
+                <h2>Offen:</h2>
+                {openTodos.map(todo => <ToDoCard key={todo.id} todo={todo}/>)}
+            </div>
+            <div>
+                <h2>In Bearbeitung:</h2>
+                {inProgressTodos.map(todo => <ToDoCard key={todo.id} todo={todo}/>)}
+            </div>
+            <div>
+                <h2>Erledigt:</h2>
+                {doneTodos.map(todo => <ToDoCard key={todo.id} todo={todo}/>)}
+            </div>
+            
         </>
     )
 }
